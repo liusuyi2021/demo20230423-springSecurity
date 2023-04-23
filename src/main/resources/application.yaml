@@ -3,3 +3,9 @@ spring:
     view:
       prefix: classpath:/templates/
       suffix: .html
+  datasource:
+      #  不使用数据库连接池
+    url: jdbc:mysql://192.168.1.15:3306/springboot?characterEncoding=utf8
+    username: root
+    password: redmine
+    driver-class-name: com.mysql.jdbc.Driver

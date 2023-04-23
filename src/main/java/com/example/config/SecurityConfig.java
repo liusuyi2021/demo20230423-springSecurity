@@ -1,26 +1,26 @@
 package com.example.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.DefaultSecurityFilterChain;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 import javax.annotation.Resource;
-import javax.servlet.Filter;
-import java.util.ArrayList;
-import java.util.List;
+import javax.sql.DataSource;
+
+import static org.springframework.boot.jdbc.DatabaseDriver.MYSQL;
+
 
 /**
  * @ClassName: SecurityConfiguration
@@ -30,21 +30,55 @@ import java.util.List;
  * @Version: 1.0
  **/
 @EnableWebSecurity
-@Configuration
 public class SecurityConfig {
 
     @Resource
     WebAuthenticationSuccessHandler webAuthenticationSuccessHandler;
     @Resource
     WebAuthenticationFailureHandler webAuthenticationFailureHandler;
-    // 注册UserDetailsService的一个实例
+    @Autowired
+    protected ApplicationContext applicationContext;
+    /*JDBC验证*/
     @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager users = new InMemoryUserDetailsManager();
-        users.createUser(User.withUsername("root").password("{noop}123456").roles("admin").build());
-        users.createUser(User.withUsername("cjn").password("{noop}123456").roles("user").build());
+    public DataSource dataSource() {
+        return applicationContext.getBean(DataSource.class);
+    }
+    @Bean
+    public UserDetailsManager users(DataSource dataSource) {
+        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        UserDetails user = User
+                .withUsername("user1")
+                .password(passwordEncoder.encode("123456"))
+                .roles("role1")
+                .build();
+        JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
+        users.createUser(user);
         return users;
     }
+
+//    /*内存验证*/
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//        UserDetails user1 = User
+//                .withUsername("user1")
+//                .password(passwordEncoder.encode("123456"))
+//                .roles("role1")
+//                .build();
+//        UserDetails user2 = User
+//                .withUsername("user2")
+//                .password(passwordEncoder.encode("123456"))
+//                .roles("role2")
+//                .build();
+//        UserDetails user3 = User
+//                .withUsername("user3")
+//                .password(passwordEncoder.encode("123456"))
+//                .roles("role3")
+//                .build();
+//        return new InMemoryUserDetailsManager(user1, user2, user3);
+//    }
+
+
     /**
      * 配置过滤器链：注册SecurityFilterChain的一个实例
      * 对应： configure(HttpSecurity)
@@ -54,25 +88,25 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(  "/login",                        //排除不需spring security验证的页面
+                .antMatchers("/login",                        //排除不需spring security验证的页面
                         "/js/**", "/css/**", "/jQuery/**", "/images/**", "/icon/**", "/file/**").permitAll()    //解决静态资源被拦截的问题(新，写在这里)
                 .anyRequest().authenticated()
                 .and()
-        // 开启登录
-        .formLogin()
+                // 开启登录
+                .formLogin()
                 .loginPage("/loginPage")   //自定义登录页面
                 .loginProcessingUrl("/doLogin")   // 登录访问路径
                 .defaultSuccessUrl("/hello").permitAll() // 登陆成功跳转
-                .successHandler(webAuthenticationSuccessHandler)
-                .failureHandler(webAuthenticationFailureHandler)
+                //.successHandler(webAuthenticationSuccessHandler)//适用于前后端分离返回前端登录成功
+                //.failureHandler(webAuthenticationFailureHandler)//适用于前后端分离返回前端登录失败
                 //.failureForwardUrl("/error")
-                .failureUrl("/fail")
+                // .failureUrl("/fail")
                 .and()
                 .csrf().disable() //关闭csrf防护
-        // 开启退出
-        .logout()
+                // 开启退出
+                .logout()
                 .logoutUrl("/logout") // 登出访问路径
-                .logoutSuccessUrl("/login") // 登出成功跳转
+                .logoutSuccessUrl("/loginPage") // 登出成功跳转
                 .permitAll();
 
         return http.build();

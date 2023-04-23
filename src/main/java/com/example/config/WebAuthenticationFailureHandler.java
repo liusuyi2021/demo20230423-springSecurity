@@ -28,7 +28,6 @@ public class WebAuthenticationFailureHandler implements AuthenticationFailureHan
     @Override
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
         httpServletResponse.setContentType("application/json;charset=UTF-8");
-
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("msg","登录失败");
         hashMap.put("e",e.getMessage());

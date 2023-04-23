@@ -18,11 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class HelloController {
 
+    /*首页*/
     @RequestMapping("/hello")
     public String hello(){
         return "index";
     }
-
+    /*登录页*/
     @RequestMapping("/loginPage")
     public String login(){
         return "login";
