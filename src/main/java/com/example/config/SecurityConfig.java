@@ -34,7 +34,7 @@ import static org.springframework.boot.jdbc.DatabaseDriver.MYSQL;
  * @Version: 1.0
  **/
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
     @Resource
     DataSource dataSource;
     @Resource
@@ -42,78 +42,65 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     WebAuthenticationFailureHandler webAuthenticationFailureHandler;
     /*JDBC验证*/
-//    //这是用户认证
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//
-//        //这是添加认证权限的地方
-//        auth.jdbcAuthentication().passwordEncoder(new BCryptPasswordEncoder())
-//                .dataSource(dataSource)
-//                .usersByUsernameQuery("select username, password,status from sys_user where username=?")
-//                .authoritiesByUsernameQuery("SELECT u.username as username ,r.role_desc as role FROM sys_user u" +
-//                        "INNER JOIN sys_user_role ur ON u.id = ur.uid" +
-//                        "INNER JOIN sys_role r ON r.id = ur.rid  where username=?");
-//
-//
-//    }
 
     /*内存验证*/
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//        UserDetails user1 = User
-//                .withUsername("user1")
-//                .password(passwordEncoder.encode("123456"))
-//                .roles("vip1")
-//                .build();
-//        UserDetails user2 = User
-//                .withUsername("user2")
-//                .password(passwordEncoder.encode("123456"))
-//                .roles("vip2")
-//                .build();
-//        UserDetails user3 = User
-//                .withUsername("user3")
-//                .password(passwordEncoder.encode("123456"))
-//                .roles("vip3")
-//                .build();
-//        return new InMemoryUserDetailsManager(user1, user2, user3);
+    @Bean
+    public UserDetailsService userDetailsService() {
+        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        UserDetails user1 = User
+                .withUsername("user1")
+                .password(passwordEncoder.encode("123456"))
+                .roles("vip1")
+                .build();
+        UserDetails user2 = User
+                .withUsername("user2")
+                .password(passwordEncoder.encode("123456"))
+                .roles("vip2")
+                .build();
+        UserDetails user3 = User
+                .withUsername("user3")
+                .password(passwordEncoder.encode("123456"))
+                .roles("vip3")
+                .build();
+        return new InMemoryUserDetailsManager(user1, user2, user3);
+    }
+
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.inMemoryAuthentication()
+//                .passwordEncoder(new BCryptPasswordEncoder())
+//                .withUser("admin").password(new BCryptPasswordEncoder().encode("123456")).roles("vip1", "vip2", "vip3")
+//                .and()
+//                .withUser("liusuyi").password(new BCryptPasswordEncoder().encode("123456")).roles("vip1");
 //    }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .passwordEncoder(new BCryptPasswordEncoder())
-                .withUser("admin")
-                .password(new BCryptPasswordEncoder().encode("123456")).roles("vip1", "vip2", "vip3");
-    }
-
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/").permitAll()
-                .antMatchers("/js/*","/css/*").permitAll()
-                .antMatchers("/level1/*").hasRole("vip1")
-                .antMatchers("/level2/*").hasRole("vip2")
-                .antMatchers("/level3/*").hasRole("vip3");
-
-        http.formLogin()// 开启登录
-                .loginPage("/loginPage")   //自定义登录页面
-                .loginProcessingUrl("/doLogin")   // 登录访问路径
-                .defaultSuccessUrl("/hello").permitAll() // 登陆成功跳转
-                //.successHandler(webAuthenticationSuccessHandler)//适用于前后端分离返回前端登录成功
-                //.failureHandler(webAuthenticationFailureHandler)//适用于前后端分离返回前端登录失败
-                //.failureForwardUrl("/error")
-                 .failureUrl("/loginPage")
-                .and()
-                .csrf().disable() //关闭csrf防护
-                // 开启退出
-                .logout()
-                .logoutUrl("/logout") // 登出访问路径
-                .logoutSuccessUrl("/loginPage") // 登出成功跳转
-                .permitAll()
-                .and()
-                .rememberMe();
-    }
+//
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http.authorizeRequests().antMatchers("/").permitAll()
+//                .antMatchers("/js/*","/css/*").permitAll()
+//                .antMatchers("/level1/*").hasRole("vip1")
+//                .antMatchers("/level2/*").hasRole("vip2")
+//                .antMatchers("/level3/*").hasRole("vip3");
+//
+//        http.formLogin()// 开启登录
+//                .loginPage("/loginPage")   //自定义登录页面
+//                .loginProcessingUrl("/doLogin")   // 登录访问路径
+//                .defaultSuccessUrl("/hello").permitAll() // 登陆成功跳转
+//                //.successHandler(webAuthenticationSuccessHandler)//适用于前后端分离返回前端登录成功
+//                //.failureHandler(webAuthenticationFailureHandler)//适用于前后端分离返回前端登录失败
+//                //.failureForwardUrl("/error")
+//                 .failureUrl("/loginPage")
+//                .and()
+//                .csrf().disable() //关闭csrf防护
+//                // 开启退出
+//                .logout()
+//                .logoutUrl("/logout") // 登出访问路径
+//                .logoutSuccessUrl("/loginPage") // 登出成功跳转
+//                .permitAll()
+//                .and()
+//                .rememberMe();
+//    }
 
 
     /**
@@ -121,31 +108,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 对应： configure(HttpSecurity)
      * 对登录页面等进行配置
      */
-//    @Bean
-//    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//                .antMatchers("/login",                        //排除不需spring security验证的页面
-//                        "/js/**", "/css/**", "/jQuery/**", "/images/**", "/icon/**", "/file/**").permitAll()    //解决静态资源被拦截的问题(新，写在这里)
-//                .anyRequest().authenticated()
-//                .and()
-//                // 开启登录
-//                .formLogin()
-//                .loginPage("/loginPage")   //自定义登录页面
-//                .loginProcessingUrl("/doLogin")   // 登录访问路径
-//                .defaultSuccessUrl("/hello").permitAll() // 登陆成功跳转
-//                //.successHandler(webAuthenticationSuccessHandler)//适用于前后端分离返回前端登录成功
-//                //.failureHandler(webAuthenticationFailureHandler)//适用于前后端分离返回前端登录失败
-//                //.failureForwardUrl("/error")
-//                // .failureUrl("/fail")
-//                .and()
-//                .csrf().disable() //关闭csrf防护
-//                // 开启退出
-//                .logout()
-//                .logoutUrl("/logout") // 登出访问路径
-//                .logoutSuccessUrl("/loginPage") // 登出成功跳转
-//                .permitAll();
-//
-//        return http.build();
-//    }
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/",                        //排除不需spring security验证的页面
+                        "/js/**", "/css/**", "/jQuery/**", "/images/**", "/logo/**", "/semantic/**").permitAll()    //解决静态资源被拦截的问题(新，写在这里)
+                .antMatchers("/level1/*").hasRole("vip1")
+                .antMatchers("/level2/*").hasRole("vip2")
+                .antMatchers("/level3/*").hasRole("vip3")
+                .anyRequest().authenticated()
+                .and()
+                // 开启登录
+                .formLogin()
+                .loginPage("/loginPage")   //自定义登录页面
+                .loginProcessingUrl("/doLogin")   // 登录访问路径
+                .defaultSuccessUrl("/hello").permitAll() // 登陆成功跳转
+                //.successHandler(webAuthenticationSuccessHandler)//适用于前后端分离返回前端登录成功
+                //.failureHandler(webAuthenticationFailureHandler)//适用于前后端分离返回前端登录失败
+                //.failureForwardUrl("/error")
+                // .failureUrl("/fail")
+                .and()
+                .csrf().disable() //关闭csrf防护
+                // 开启退出
+                .logout()
+                .logoutUrl("/logout") // 登出访问路径
+                .logoutSuccessUrl("/hello") // 登出成功跳转
+                .permitAll();
+
+        return http.build();
+    }
 
 }

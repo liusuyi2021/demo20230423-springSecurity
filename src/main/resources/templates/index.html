@@ -1,46 +1,95 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <link th:href="@{/semantic/semantic.min.css}" th:rel="stylesheet"/>
     <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
     <script th:src="@{/semantic/semantic.min.js}"></script>
-
 </head>
 <body>
-<a th:href="@{/logout}"><i class="power off icon"></i>注销</a>
-<div><h1 class="ui header">欢迎登录</h1></div>
-<div>
-    <hr/>
+<div class="ui large secondary pointing menu">
+    <div class="left item" sec:authorize="isAuthenticated()">
+        <!--已登录-->
+        <a class="item">用户名：<span sec:authentication="name"></span></a>
+        <a class="item">角色：<span sec:authentication="principal.authorities"></span></a>
+    </div>
+    <div class="right item">
+        <!--未登录-->
+        <div sec:authorize="!isAuthenticated()">
+            <a class="item" th:href="@{/loginPage}"><i class="sign-in icon"></i>登录</a>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            <!--已登录-->
+            <a class="item" th:href="@{/logout}">
+                <i class="sign-out icon"></i>退出</a>
+        </div>
+    </div>
 </div>
-<div>
-    <table class="ui celled table">
-        <thead>
-        <tr>
-            <th>leve1</th>
-            <th>leve2</th>
-            <th>leve3</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><a th:href="@{/level1/1}">leve1-1</a></td>
-            <td><a th:href="@{/level2/1}">leve2-1</a></td>
-            <td><a th:href="@{/level3/1}">leve3-1</a></td>
-        </tr>
-        <tr>
-            <td><a th:href="@{/level1/2}">leve1-2</a></td>
-            <td><a th:href="@{/level2/2}">leve2-2</a></td>
-            <td><a th:href="@{/level3/2}">leve3-2</a></td>
-        </tr>
-        <tr>
-            <td><a th:href="@{/level1/3}">leve1-3</a></td>
-            <td><a th:href="@{/level2/3}">leve2-3</a></td>
-            <td><a th:href="@{/level3/3}">leve3-3</a></td>
-        </tr>
-        </tbody>
-    </table>
+<h1 class="ui center aligned header">欢迎登录</h1>
+<div class="ui three column grid container">
+    <div sec:authorize="hasRole('vip1')" class="column">
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th class="ui center aligned header">leve1</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="ui center aligned"><a th:href="@{/level1/1}">leve1-1</a></td>
+
+            </tr>
+            <tr>
+                <td class="ui center aligned"><a th:href="@{/level1/2}">leve1-2</a></td>
+            </tr>
+            <tr>
+                <td class="ui center aligned"><a th:href="@{/level1/3}">leve1-3</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div sec:authorize="hasRole('vip2')" class="column">
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th class="ui center aligned header">leve2</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="ui center aligned"><a th:href="@{/level2/1}">leve2-1</a></td>
+            </tr>
+            <tr>
+                <td class="ui center aligned"><a th:href="@{/level2/2}">leve2-2</a></td>
+            </tr>
+            <tr>
+                <td class="ui center aligned"><a th:href="@{/level2/3}">leve2-3</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div sec:authorize="hasRole('vip3')" class="column">
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th class="ui center aligned header">leve3</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="ui center aligned"><a th:href="@{/level3/1}">leve3-1</a></td>
+            </tr>
+            <tr>
+                <td class="ui center aligned"><a th:href="@{/level3/2}">leve3-2</a></td>
+            </tr>
+            <tr>
+                <td class="ui center aligned"><a th:href="@{/level3/3}">leve3-3</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>
