@@ -3,23 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>登录页</title>
-    <style>
-        div {
-            vertical-align: middle;
-            text-align: center;
+    <link th:href="@{/semantic/semantic.min.css}" th:rel="stylesheet"/>
+    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+    <script th:src="@{/semantic/semantic.min.js}"></script>
+    <style type="text/css">
+        body {
+            background-color: #DADADA;
+        }
+
+        body > .grid {
+            height: 100%;
+        }
+
+        .image {
+            margin-top: -100px;
+        }
+
+        .column {
+            max-width: 450px;
         }
     </style>
 </head>
 <body>
-<div><p1>登录</p1></div>
-<div><hr/></div>
-<div>
-    <form th:action="@{/doLogin}" th:method="post">
-        <div> 用户： <input name="username" type="text"></div>
-        <div> 密码： <input name="password" type="text"></div>
-        <div><input type="submit" value="登录"></div>
-    </form>
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <h2 class="ui teal image header">
+            <img src="/logo/logo.png" class="image">
+            <div class="content">
+                登录
+            </div>
+        </h2>
+        <form class="ui large form error" th:action="@{/doLogin}" th:method="post">
+            <div class="ui stacked segment">
+                <div class="field error">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" name="username" placeholder="Username">
+                    </div>
+                </div>
+                <div class="field error">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input type="password" name="password" placeholder="Password">
+                    </div>
+                </div>
+                    <div class="ui fluid checkbox">
+                        <input type="checkbox" name="remember">
+                        <label>记住我</label>
+                    </div>
+                <div class="ui fluid large teal submit button">登录</div>
+            </div>
+        </form>
+    </div>
 </div>
-
+<script th:inline="javascript">
+    $('.ui.form')
+        .form({
+            fields: {
+                name: 'empty',
+                gender: 'empty',
+                username: 'empty',
+                password: ['minLength[6]', 'empty'],
+                skills: ['minCount[2]', 'empty'],
+                terms: 'checked'
+            }
+        })
+    ;
+</script>
 </body>
 </html>

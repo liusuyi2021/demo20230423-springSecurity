@@ -1,8 +1,8 @@
 package com.example;
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 class Demo20230423SpringSecurityApplicationTests {
 
     @Test
-    void contextLoads() {
+    public void contextLoads() {
         PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         String password="123456";
         String encoder="{bcrypt}$2a$10$keNhzaHRtqrLnrWW86F0/e5g9ezYsvBFYxe4MH94OW8C05GS757sm";

@@ -3,44 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <style>
-        div {
-            vertical-align: middle;
-            text-align: center;
-        }
+    <link th:href="@{/semantic/semantic.min.css}" th:rel="stylesheet"/>
+    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+    <script th:src="@{/semantic/semantic.min.js}"></script>
 
-        /* 表格边框 */
-        table {
-            border-collapse: collapse;
-            margin: 0 auto;
-        }
-
-        table td,
-        table th {
-            border: 1px black solid;
-            padding: 10px 30px;
-        }
-
-        table th {
-            background-color: lightgray;
-        }
-
-
-    </style>
 </head>
 <body>
-<a th:href="@{/logout}">注销</a>
-<div><h1>欢迎登录</h1></div>
+<a th:href="@{/logout}"><i class="power off icon"></i>注销</a>
+<div><h1 class="ui header">欢迎登录</h1></div>
 <div>
     <hr/>
 </div>
 <div>
-    <table>
+    <table class="ui celled table">
+        <thead>
         <tr>
             <th>leve1</th>
             <th>leve2</th>
             <th>leve3</th>
         </tr>
+        </thead>
+        <tbody>
         <tr>
             <td><a th:href="@{/level1/1}">leve1-1</a></td>
             <td><a th:href="@{/level2/1}">leve2-1</a></td>
@@ -56,6 +39,7 @@
             <td><a th:href="@{/level2/3}">leve2-3</a></td>
             <td><a th:href="@{/level3/3}">leve3-3</a></td>
         </tr>
+        </tbody>
     </table>
 </div>
 </body>
