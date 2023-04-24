@@ -1,12 +1,8 @@
 package com.example.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.naming.AuthenticationException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @ClassName: HelloController
@@ -29,4 +25,16 @@ public class HelloController {
         return "login";
     }
 
+    @RequestMapping("/level1/{id}")
+    public String level1(@PathVariable("id") String id){
+        return "/level1/"+id;
+    }
+    @RequestMapping("/level2/{id}")
+    public String level2(@PathVariable("id") String id){
+        return "/level2/"+id;
+    }
+    @RequestMapping("/level3/{id}")
+    public String level3(@PathVariable("id") String id){
+        return "/level3/"+id;
+    }
 }

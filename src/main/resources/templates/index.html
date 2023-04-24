@@ -1,11 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        div {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        /* 表格边框 */
+        table {
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        table td,
+        table th {
+            border: 1px black solid;
+            padding: 10px 30px;
+        }
+
+        table th {
+            background-color: lightgray;
+        }
+
+
+    </style>
 </head>
 <body>
 <a th:href="@{/logout}">注销</a>
-<h1>欢迎登录</h1>
+<div><h1>欢迎登录</h1></div>
+<div>
+    <hr/>
+</div>
+<div>
+    <table>
+        <tr>
+            <th>leve1</th>
+            <th>leve2</th>
+            <th>leve3</th>
+        </tr>
+        <tr>
+            <td><a th:href="@{/level1/1}">leve1-1</a></td>
+            <td><a th:href="@{/level2/1}">leve2-1</a></td>
+            <td><a th:href="@{/level3/1}">leve3-1</a></td>
+        </tr>
+        <tr>
+            <td><a th:href="@{/level1/2}">leve1-2</a></td>
+            <td><a th:href="@{/level2/2}">leve2-2</a></td>
+            <td><a th:href="@{/level3/2}">leve3-2</a></td>
+        </tr>
+        <tr>
+            <td><a th:href="@{/level1/3}">leve1-3</a></td>
+            <td><a th:href="@{/level2/3}">leve2-3</a></td>
+            <td><a th:href="@{/level3/3}">leve3-3</a></td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>

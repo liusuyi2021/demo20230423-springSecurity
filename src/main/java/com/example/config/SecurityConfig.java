@@ -39,44 +39,28 @@ public class SecurityConfig {
     @Autowired
     protected ApplicationContext applicationContext;
     /*JDBC验证*/
+
+    /*内存验证*/
     @Bean
-    public DataSource dataSource() {
-        return applicationContext.getBean(DataSource.class);
-    }
-    @Bean
-    public UserDetailsManager users(DataSource dataSource) {
+    public UserDetailsService userDetailsService() {
         PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        UserDetails user = User
+        UserDetails user1 = User
                 .withUsername("user1")
                 .password(passwordEncoder.encode("123456"))
                 .roles("role1")
                 .build();
-        JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
-        users.createUser(user);
-        return users;
+        UserDetails user2 = User
+                .withUsername("user2")
+                .password(passwordEncoder.encode("123456"))
+                .roles("role2")
+                .build();
+        UserDetails user3 = User
+                .withUsername("user3")
+                .password(passwordEncoder.encode("123456"))
+                .roles("role3")
+                .build();
+        return new InMemoryUserDetailsManager(user1, user2, user3);
     }
-
-//    /*内存验证*/
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//        UserDetails user1 = User
-//                .withUsername("user1")
-//                .password(passwordEncoder.encode("123456"))
-//                .roles("role1")
-//                .build();
-//        UserDetails user2 = User
-//                .withUsername("user2")
-//                .password(passwordEncoder.encode("123456"))
-//                .roles("role2")
-//                .build();
-//        UserDetails user3 = User
-//                .withUsername("user3")
-//                .password(passwordEncoder.encode("123456"))
-//                .roles("role3")
-//                .build();
-//        return new InMemoryUserDetailsManager(user1, user2, user3);
-//    }
 
 
     /**

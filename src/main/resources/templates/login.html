@@ -3,12 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>登录页</title>
+    <style>
+        div {
+            vertical-align: middle;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<form th:action="@{/doLogin}" th:method="post">
-    <div> 用户： <input name="username" type="text"></div>
-    <div> 密码： <input name="password" type="text"></div>
-    <div><input type="submit" value="登录"></div>
-</form>
+<div><p1>登录</p1></div>
+<div><hr/></div>
+<div>
+    <form th:action="@{/doLogin}" th:method="post">
+        <div> 用户： <input name="username" type="text"></div>
+        <div> 密码： <input name="password" type="text"></div>
+        <div><input type="submit" value="登录"></div>
+    </form>
+</div>
+
 </body>
 </html>
